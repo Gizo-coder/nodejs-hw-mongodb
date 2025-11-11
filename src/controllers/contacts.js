@@ -1,4 +1,4 @@
-import * as contactsService from './servicesContacts.js';
+import * as contactsService from '../services/contacts.js';
 
 export async function getAllContactsController(req, res, next) {
   try {

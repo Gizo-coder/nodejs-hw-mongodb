@@ -32,6 +32,8 @@ async function runSeed() {
 
     const raw = fs.readFileSync(contactsPath);
     const contacts = JSON.parse(raw);
+
+
     const result = await Contact.insertMany(contacts);
     console.log(`Inserted ${result.length} contacts`);
     await mongoose.connection.close();
