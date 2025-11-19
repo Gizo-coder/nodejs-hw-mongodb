@@ -1,47 +1,49 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import mongoose from 'mongoose';
-import fs from 'fs';
-import path from 'path';
 import { Contact } from '../db/models/Contact.js';
+dotenv.config();
 
-const contactsPath = path.resolve('src', 'seed', 'contacts.json');
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/contactsdb';
 
-async function runSeed() {
-  const {
-    MONGODB_USER,
-    MONGODB_PASSWORD,
-    MONGODB_URL,
-    MONGODB_DB
-  } = process.env;
-
-  if (!MONGODB_USER || !MONGODB_PASSWORD || !MONGODB_URL || !MONGODB_DB) {
-    console.error('Missing MongoDB env vars in .env');
-    process.exit(1);
+const contactsSeed = [
+  {
+    name: "Gizem Demirci",
+    phoneNumber: "555-123-4567",
+    email: "gizdemirci91@gmail.com",
+    isFavourite: true,
+    contactType: "personal"
+  },
+  {
+    name: "Onur Pınargözü",
+    phoneNumber: "555-987-6543",
+    email: "o.pinargozu@gmail.com",
+    isFavourite: false,
+    contactType: "work"
+  },
+  {
+    name: "Mercan Deniz",
+    phoneNumber: "555-111-2222",
+    contactType: "personal"
   }
+];
 
-  const connectionString = `mongodb+srv://${encodeURIComponent(
-    MONGODB_USER
-  )}:${encodeURIComponent(MONGODB_PASSWORD)}@${MONGODB_URL}/${MONGODB_DB}?retryWrites=true&w=majority`;
-
+const seedDB = async () => {
   try {
-    await mongoose.connect(connectionString, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(MONGO_URI);
+    console.log("Connected to MongoDB");
 
-    const raw = fs.readFileSync(contactsPath);
-    const contacts = JSON.parse(raw);
+    await Contact.deleteMany({});
+    console.log("Existing contacts deleted");
 
+    await Contact.insertMany(contactsSeed);
+    console.log("Seed contacts inserted");
 
-    const result = await Contact.insertMany(contacts);
-    console.log(`Inserted ${result.length} contacts`);
-    await mongoose.connection.close();
     process.exit(0);
   } catch (err) {
-    console.error('Seed error', err);
+    console.error("Seed error:", err);
     process.exit(1);
   }
-}
+};
 
-runSeed();
+seedDB();
+

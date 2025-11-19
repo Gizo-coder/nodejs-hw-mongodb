@@ -1,8 +1,8 @@
 import express from 'express';
-import cors from 'cors';
-import pino from 'pino';
-import pinoHttp from 'pino-http';
+import mongoose from 'mongoose';
 import contactsRouter from './routes/contacts.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
 export function setupServer() {
   const app = express();
