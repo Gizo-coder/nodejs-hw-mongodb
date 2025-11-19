@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { Contact } from '../db/models/Contact.js';
 dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/contactsdb';
+const MONGO_URI = process.env.MONGO_URI;
 
 const contactsSeed = [
   {
