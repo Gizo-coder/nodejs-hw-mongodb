@@ -1,7 +1,7 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import mongoose from 'mongoose';
 import { Contact } from '../db/models/Contact.js';
-dotenv.config();
+
 
 const MONGO_URI = process.env.MONGO_URI;
 
