@@ -2,7 +2,6 @@ import createHttpError from 'http-errors';
 import * as contactsService from '../services/contacts.js';
 import Contact from "../models/contact.js";
 
-// GET /contacts (pagination + filtering + sorting)
 export const getContactsController = async (req, res, next) => {
   try {
     const {
@@ -16,12 +15,10 @@ export const getContactsController = async (req, res, next) => {
 
     const skip = (page - 1) * perPage;
 
-    // Filtre
     const filter = {};
     if (type) filter.contactType = type;
     if (isFavourite !== undefined) filter.isFavourite = isFavourite === "true";
 
-    // Sıralama
     const sort = {};
     sort[sortBy] = sortOrder === "desc" ? -1 : 1;
 
@@ -51,8 +48,6 @@ export const getContactsController = async (req, res, next) => {
     next(err);
   }
 };
-
-// GET /contacts/:id
 export const getContactById = async (req, res, next) => {
   try {
     const { contactId } = req.params;
@@ -68,8 +63,6 @@ export const getContactById = async (req, res, next) => {
     next(err);
   }
 };
-
-// POST /contacts
 export const createContact = async (req, res, next) => {
   try {
     const newContact = await contactsService.createContact(req.body);
@@ -82,8 +75,6 @@ export const createContact = async (req, res, next) => {
     next(err);
   }
 };
-
-// PATCH /contacts/:id
 export const updateContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
@@ -100,8 +91,6 @@ export const updateContact = async (req, res, next) => {
     next(err);
   }
 };
-
-// DELETE /contacts/:id
 export const deleteContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
