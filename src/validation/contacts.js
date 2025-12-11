@@ -14,4 +14,4 @@ export const updateContactSchema = Joi.object({
   email: Joi.string().email(),
   contactType: Joi.string().valid("work", "home", "personal"),
   isFavourite: Joi.boolean(),
-}).min(1); // en az 1 alan zorunlu
+}).min(1);

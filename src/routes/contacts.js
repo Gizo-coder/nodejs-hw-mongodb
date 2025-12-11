@@ -6,20 +6,10 @@ import { createContactSchema, updateContactSchema} from "../validation/contacts.
 import { getContactsController, getContactByIdController, addContactController, updateContactController, deleteContactController} from "../controllers/contacts.js";
 
 const router = express.Router();
-
-// GET /contacts  (pagination + sorting + filtering)
 router.get("/", ctrlWrapper(getContactsController));
-
-// GET /contacts/:contactId
 router.get("/:contactId", isValidId, ctrlWrapper(getContactByIdController));
-
-// POST /contacts
 router.post("/", validateBody(createContactSchema), ctrlWrapper(addContactController));
-
-// PATCH /contacts/:contactId
 router.patch("/:contactId", isValidId, validateBody(updateContactSchema), ctrlWrapper(updateContactController));
-
-// DELETE /contacts/:contactId
 router.delete("/:contactId", isValidId,ctrlWrapper(deleteContactController));
 
 export default router;
