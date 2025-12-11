@@ -1,29 +1,29 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import mongoose from 'mongoose';
 import { Contact } from '../db/models/Contact.js';
-dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/contactsdb';
+
+const MONGO_URI = process.env.MONGO_URI;
 
 const contactsSeed = [
   {
-    name: "Gizem Demirci",
-    phoneNumber: "555-123-4567",
-    email: "gizdemirci91@gmail.com",
-    isFavourite: true,
-    contactType: "personal"
-  },
-  {
-    name: "Onur Pınargözü",
-    phoneNumber: "555-987-6543",
-    email: "o.pinargozu@gmail.com",
+    name: "Yulia Shevchenko",
+    phoneNumber: "+380000000001",
+    email: "oleh1@example.com",
     isFavourite: false,
-    contactType: "work"
+    contactType: "personal",
   },
   {
-    name: "Mercan Deniz",
-    phoneNumber: "555-111-2222",
-    contactType: "personal"
+    name: "Dmytro Boyko",
+    phoneNumber: "+380000000002",
+    email: null,
+    isFavourite: false,
+    contactType: "personal",
+  },
+  {
+    name: "Andriy Pavlenko",
+    phoneNumber: "+380000000003",
+    contactType: "home",
   }
 ];
 

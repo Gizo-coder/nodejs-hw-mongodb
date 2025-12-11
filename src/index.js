@@ -1,23 +1,15 @@
-import dotenv from 'dotenv';
-import express from 'express';
-import mongoose from 'mongoose';
-import contactsRouter from './routes/contacts.js';
-import { errorHandler } from './middlewares/errorHandler.js';
-import { notFoundHandler } from './middlewares/notFoundHandler.js';
-dotenv.config();
-
-const app = express();
-app.use(express.json());
-app.use('/contacts', contactsRouter);
-app.use(notFoundHandler);
-app.use(errorHandler);
+import 'dotenv/config';
+import { setupServer } from './server.js';
+import { initMongoConnection } from './db/initMongoConnection.js';
 
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/contactsdb';
+const app = setupServer();
 
-mongoose.connect(MONGO_URI)
+initMongoConnection()
   .then(() => {
-    console.log("Connected to MongoDB");
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
-  .catch(err => console.error("DB connection error:", err));
+  .catch(err => {
+    console.error('Failed to start server due to DB connection error');
+    process.exit(1);
+  });

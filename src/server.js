@@ -1,5 +1,7 @@
 import express from 'express';
-import mongoose from 'mongoose';
+import cors from 'cors';
+import pino from 'pino';
+import pinoHttp from 'pino-http';
 import contactsRouter from './routes/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
@@ -17,9 +19,9 @@ export function setupServer() {
 
   app.use('/contacts', contactsRouter);
 
-  app.use((req, res) => {
-    res.status(404).json({ message: 'Not found' });
-  });
+  app.use(notFoundHandler);
+
+  app.use(errorHandler);
 
   return app;
 }
