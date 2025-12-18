@@ -1,5 +1,5 @@
 ## Live API
-https://xxx.onrender.com](https://nodejs-hw-mongodb-8inq.onrender.com
+https://nodejs-hw-mongodb-8inq.onrender.com
 
 ## Auth routes
 POST   /auth/register
