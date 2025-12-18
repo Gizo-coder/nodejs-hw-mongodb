@@ -16,7 +16,7 @@ export const getContactsController = async (req, res, next) => {
 
     const skip = (page - 1) * perPage;
 
-    const filter = {};
+    const filter = { userId: req.user._id };
     if (type) filter.contactType = type;
     if (isFavourite !== undefined) filter.isFavourite = isFavourite === "true";
 
@@ -70,7 +70,7 @@ export const getContactByIdController = async (req, res, next) => {
 // Post
 export const addContactController = async (req, res, next) => {
   try {
-    const newContact = await contactsService.createContact(req.body);
+    const newContact = await contactsService.createContact({ ...req.body, userId: req.user._id });
 
     res.status(201).json({
       status: 201,
