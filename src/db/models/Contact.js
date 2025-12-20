@@ -10,9 +10,11 @@ const contactSchema = new mongoose.Schema({
     email: { type: String, required: true, minlength: 3, maxlength: 20 },
     phone: { type: String, required: true, minlength: 3, maxlength: 20 },
     isFavourite: { type: Boolean, default: false },
-    contactType: { type: String, enum: ["work", "home", "personal"], default: "personal" },
+  contactType: { type: String, enum: ["work", "home", "personal"], default: "personal" },
+  photo: { type: String,default: null,},
   },
   { timestamps: true }
+  
 );
 
 const Contact = mongoose.model("Contact", contactSchema);
