@@ -1,5 +1,6 @@
 import Contact from '../db/models/Contact.js';
 
+
 export const getAllContacts = async (filter) => {
   return await Contact.find(filter);
 };
@@ -12,10 +13,14 @@ export const createContact = async (data) => {
   return await Contact.create(data);
 };
 
-export const updateContact = async (id, data) => {
-  return await Contact.findByIdAndUpdate(id, data, { new: true });
+export const updateContact = async (id, userId, data) => {
+  return await Contact.findOneAndUpdate(
+    { _id: id, userId },
+    data,
+    { new: true }
+  );
 };
 
-export const deleteContact = async (id) => {
-  return await Contact.findByIdAndDelete(id);
+export const deleteContact = async (id, userId) => {
+  return await Contact.findOneAndDelete({ _id: id, userId });
 };
