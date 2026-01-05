@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/sendEmail.js';
 import createHttpError from 'http-errors';
 import User from '../db/models/User.js';
+import bcrypt from 'bcrypt';
 
 //register
 export const registerController = async (req, res, next) => {
@@ -23,7 +24,26 @@ export const registerController = async (req, res, next) => {
 
 //login
 export const loginController = async (req, res, next) => {
-  const session = await loginUser(req.body);
+
+  const { email, password } = req.body; 
+  console.log("LOGIN TRY → Email from Postman:", email);
+  console.log("Input password:", password);
+
+  
+  const user = await User.findOne({ email: email.toLowerCase() });
+  console.log("USER FOUND IN DB →", user ? "YES" : "NO");
+
+  if (user) console.log("EMAIL IN DB:", user.email);
+  if (user) console.log("HASHED PASSWORD IN DB:", user.password);
+
+  const isMatch = user ? await bcrypt.compare(password, user.password) : false;
+  console.log("BCRYPT COMPARE RESULT →", isMatch);
+
+  if (!user || !isMatch) {
+    throw createHttpError(401, "Invalid credentials");
+  }
+
+  const session = await loginUser({ email: email.toLowerCase(), password });
 
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
@@ -76,7 +96,7 @@ export const logoutController = async (req, res, next) => {
 export const sendResetEmailController = async (req, res, next) => {
   const { email } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: email.toLowerCase() });
 
   if (!user) {
     throw createHttpError(404, 'User not found');
@@ -94,7 +114,7 @@ export const sendResetEmailController = async (req, res, next) => {
 
   try {
     await sendEmail({
-      to: email,
+      to: user.email,
       subject: 'Password Reset',
       html: `<p>Click <a href="${resetLink}">here</a> to reset your password. This link will expire in 5 minutes.</p>`,
     });
@@ -117,17 +137,19 @@ export const resetPasswordController = async (req, res, next) => {
   let payload;
   try {
     payload = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (error) {
+  } catch {
     throw createHttpError(401, 'Token is expired or invalid.');
   }
 
-  const user = await User.findOne({ email: payload.email });
+  const user = await User.findOne({ email: payload.email.toLowerCase() });
 
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
 
-  user.password = password;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  user.password = hashedPassword;
   await user.save();
 
   res.status(200).json({

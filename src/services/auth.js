@@ -27,7 +27,7 @@ export const registerUser = async (data) => {
 
   return await User.create({
     name,
-    email,
+    email: email.toLowerCase(),
     password: hashedPassword,
   });
 };
@@ -37,7 +37,7 @@ export const loginUser = async ({ email, password }) => {
     throw createHttpError(400, 'Email and password required');
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: email.toLowerCase() });
   if (!user) throw createHttpError(401, 'Invalid credentials');
 
   const isMatch = await bcrypt.compare(password, user.password);
