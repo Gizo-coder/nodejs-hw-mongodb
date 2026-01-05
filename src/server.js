@@ -31,5 +31,14 @@ export function setupServer() {
   
   app.use(errorHandler);
 
+  app.use((err, req, res, next) => {
+  console.error("SERVER ERROR:", err);
+  res.status(err.status || 500).json({
+    status: err.status || 500,
+    message: err.message,
+    data: null
+  });
+});
+
   return app;
 }
